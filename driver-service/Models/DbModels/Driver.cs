@@ -1,4 +1,6 @@
 ﻿
+using driver_service.Models.DbModels;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
@@ -12,7 +14,7 @@ namespace DriverService.Models.DBModels
         public string AvatarUrl { get; set; }
         public string Name { get; set; }
         public string InvitationToken { get; set; }
-
         public virtual Phone Phone { get; set; }
+        public virtual List<Device> Devices { get; set; }
     }
 }

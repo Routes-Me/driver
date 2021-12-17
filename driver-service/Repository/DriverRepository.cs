@@ -1,4 +1,5 @@
-﻿using DriverService.Abstraction;
+﻿using driver_service.Models.DbModels;
+using DriverService.Abstraction;
 using DriverService.Models;
 using DriverService.Models.Common;
 using DriverService.Models.DBModels;
@@ -11,6 +12,7 @@ using RoutesSecurity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DriverService.Repository
 {
@@ -177,5 +179,30 @@ namespace DriverService.Repository
                 InvitationToken = DriversDto.InvitationToken
             };
         }
+
+        public void DeleteDevice(string fcmToken)
+        {
+            if (string.IsNullOrEmpty(fcmToken))
+                throw new ArgumentException(CommonMessage.InvalidData);
+
+            Device dev = _context.Devices.Where(x => x.fcmToken == fcmToken).FirstOrDefault();
+            _context.Remove(dev);
+            _context.SaveChanges();
+        }
+
+        public async Task PostDevicesAsync(Device Device)
+        {
+            if (Device == null)
+                throw new ArgumentNullException(CommonMessage.InvalidData);
+
+            _context.Devices.Add(Device);
+            _context.SaveChanges();
+        }
+
+        public Device GetDeviceByToken(string token)
+        {
+            return _context.Devices.Where(x => x.fcmToken == token).ToList().FirstOrDefault();
+        }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using driver_service.Models.DbModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace DriverService.Models.DBModels
 {
@@ -14,6 +15,7 @@ namespace DriverService.Models.DBModels
         }
         public virtual DbSet<Driver> Drivers { get; set; }
         public virtual DbSet<Phone> Phone { get; set; }
+        public virtual DbSet<Device> Devices { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Phone>(entity =>

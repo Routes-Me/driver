@@ -9,6 +9,10 @@ using DriverService.Models;
 using DriverService.Models.DBModels;
 using DriverService.Models.Common;
 using DriverService.Models.ResponseModel;
+using System.Linq;
+using driver_service.Models.DbModels;
+using driver_service.Models.ResponseModel;
+using AutoMapper;
 
 namespace DriverService.Controllers
 {
@@ -20,11 +24,13 @@ namespace DriverService.Controllers
         private readonly IDriverRepository _driversRepository;
         private readonly DriversServiceContext _context;
         private readonly AppSettings _appSettings;
-        public DriverController(IDriverRepository driversRepository, DriversServiceContext context, IOptions<AppSettings> appSettings)
+        private readonly IMapper _mapper;
+        public DriverController(IDriverRepository driversRepository, DriversServiceContext context, IOptions<AppSettings> appSettings, IMapper mapper)
         {
             _driversRepository = driversRepository;
             _context = context;
             _appSettings = appSettings.Value;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -95,5 +101,96 @@ namespace DriverService.Controllers
             }
             return StatusCode(StatusCodes.Status200OK);
         }
+
+        [HttpPost]
+        [Route("driver/device")]
+        public IActionResult PostDevice(Device Device)
+        {
+            PostDriverResponse response = new PostDriverResponse();
+            try
+            {
+                _driversRepository.PostDevicesAsync(Device);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, CommonMessage.ExceptionMessage + ex.Message);
+            }
+            response.Message = CommonMessage.InsertDevice;
+            return StatusCode(StatusCodes.Status201Created, response);
+
+        }
+
+        [HttpPut]
+        [Route("driver/fcmToken")]
+        public IActionResult UpdateToken(DeviceDto dt)
+        {
+            try
+            {
+                Device dev = _driversRepository.GetDeviceByToken(dt.oldToken);
+                if (dev == null)
+                {
+                    return NotFound();
+                }
+                _mapper.Map(dt, dev);
+                _context.SaveChanges();
+            }
+            catch (ArgumentNullException ex)
+            {
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, CommonMessage.ExceptionMessage + ex.Message);
+            }
+            return StatusCode(StatusCodes.Status200OK, CommonMessage.FCMTokenUpdated);
+        }
+
+        [HttpDelete]
+        [Route("driver/fcmToken")]
+        public IActionResult DeleteDevice(DeviceDto dt)
+        {
+            PostDriverResponse response = new PostDriverResponse();
+            try
+            {
+                _driversRepository.DeleteDevice(dt.fcmToken);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, CommonMessage.ExceptionMessage + ex.Message);
+            }
+            response.Message = CommonMessage.DeviceDeleted;
+            return StatusCode(StatusCodes.Status200OK);
+        }
+
+        [HttpGet]
+        [Route("driver/number")]
+        public IActionResult CheckNumber(Phone phone)
+        {
+            if (_context.Drivers.Where(p => p.Phone.Number == phone.Number && p.Phone.IsActive == true).FirstOrDefault() != null)
+                return StatusCode(StatusCodes.Status200OK);
+
+            return StatusCode(StatusCodes.Status404NotFound);
+        }
+
     }
 }

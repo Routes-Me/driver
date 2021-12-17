@@ -8,30 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Abstraction\**" />
-    <Compile Remove="Migrations\**" />
-    <Compile Remove="Models\DbModels\**" />
-    <Compile Remove="Models\ResponseModel\**" />
-    <Compile Remove="Repository\**" />
-    <Content Remove="Abstraction\**" />
-    <Content Remove="Migrations\**" />
-    <Content Remove="Models\DbModels\**" />
-    <Content Remove="Models\ResponseModel\**" />
-    <Content Remove="Repository\**" />
-    <EmbeddedResource Remove="Abstraction\**" />
-    <EmbeddedResource Remove="Migrations\**" />
-    <EmbeddedResource Remove="Models\DbModels\**" />
-    <EmbeddedResource Remove="Models\ResponseModel\**" />
-    <EmbeddedResource Remove="Repository\**" />
-    <None Remove="Abstraction\**" />
-    <None Remove="Migrations\**" />
-    <None Remove="Models\DbModels\**" />
-    <None Remove="Models\ResponseModel\**" />
-    <None Remove="Repository\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Controllers\DriverController.cs" />
     <Compile Remove="Controllers\PushNotificationController.cs" />
   </ItemGroup>
 
@@ -44,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="FirebaseAdmin" Version="1.15.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.6" />
