@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DriverService.Models.ResponseModel;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 
 namespace DriverService.Models
 {
@@ -54,6 +56,7 @@ namespace DriverService.Models
     public class DriversGetResponse : Response
     {
         public Pagination pagination { get; set; }
+        public List<DriversDto> data { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public JObject included { get; set; }
