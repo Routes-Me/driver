@@ -180,12 +180,10 @@ namespace DriverService.Repository
             };
         }
 
-        public void DeleteDevice(string fcmToken)
+        public void DeleteDevice(int DeviceId)
         {
-            if (string.IsNullOrEmpty(fcmToken))
-                throw new ArgumentException(CommonMessage.InvalidData);
 
-            Device dev = _context.Devices.Where(x => x.fcmToken == fcmToken).FirstOrDefault();
+            Device dev = _context.Devices.Where(x => x.DeviceId == DeviceId).FirstOrDefault();
             _context.Remove(dev);
             _context.SaveChanges();
         }
@@ -199,9 +197,9 @@ namespace DriverService.Repository
             _context.SaveChanges();
         }
 
-        public Device GetDeviceByToken(string token)
+        public Device GetDeviceByToken(int DeviceId)
         {
-            return _context.Devices.Where(x => x.fcmToken == token).ToList().FirstOrDefault();
+            return _context.Devices.Where(x => x.DeviceId == DeviceId).ToList().FirstOrDefault();
         }
 
     }

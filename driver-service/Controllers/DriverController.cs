@@ -129,12 +129,12 @@ namespace DriverService.Controllers
         }
 
         [HttpPut]
-        [Route("driver/fcmToken")]
-        public IActionResult UpdateToken(DeviceDto dt)
+        [Route("driver/device/{DeviceId}")]
+        public IActionResult UpdateToken(int DeviceId , DeviceDto dt)
         {
             try
             {
-                Device dev = _driversRepository.GetDeviceByToken(dt.oldToken);
+                Device dev = _driversRepository.GetDeviceByToken(DeviceId);
                 if (dev == null)
                 {
                     return NotFound();
@@ -158,13 +158,13 @@ namespace DriverService.Controllers
         }
 
         [HttpDelete]
-        [Route("driver/fcmToken")]
-        public IActionResult DeleteDevice(DeviceDto dt)
+        [Route("driver/device/{DeviceId}")]
+        public IActionResult DeleteDevice(int DeviceId)
         {
             PostDriverResponse response = new PostDriverResponse();
             try
             {
-                _driversRepository.DeleteDevice(dt.fcmToken);
+                _driversRepository.DeleteDevice(DeviceId);
             }
             catch (ArgumentNullException ex)
             {

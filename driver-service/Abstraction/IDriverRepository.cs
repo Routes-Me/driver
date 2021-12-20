@@ -11,8 +11,8 @@ namespace DriverService.Abstraction
         dynamic UpdateDriver(DriversDto driversDto);
         dynamic GetDriver(string driverId, Pagination pageInfo, string includeType);
         dynamic PostDriver(DriversDto driversDto);
-        Device GetDeviceByToken(string token);
+        Device GetDeviceByToken(int DeviceId);
         Task PostDevicesAsync(Device Device);
-        void DeleteDevice(string fcmToken);
+        void DeleteDevice(int DeviceId);
     }
 }
