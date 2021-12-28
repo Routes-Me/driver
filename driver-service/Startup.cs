@@ -1,3 +1,5 @@
+using driver_service.Abstraction;
+using driver_service.Repository;
 using DriverService.Abstraction;
 using DriverService.Models.Common;
 using DriverService.Models.DBModels;
@@ -41,6 +43,7 @@ namespace driver_service
             });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IDriverRepository, DriverRepository>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

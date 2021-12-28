@@ -1,6 +1,7 @@
-﻿using driver_service.Models.DbModels;
+﻿using AutoMapper;
 using driver_service.Models.ResponseModel;
-using AutoMapper;
+using DriverService.Models.DBModels;
+using DriverService.Models.ResponseModel;
 
 namespace driver_service.Profiles
 {
@@ -8,7 +9,10 @@ namespace driver_service.Profiles
     {
         public DriverProfiles()
         {
-            CreateMap<DeviceDto, Device>();
+            //Read Dto's
+            CreateMap<Driver, DriversDto>();
+            CreateMap<Driver, DriverReadDto>();
+            CreateMap<DriversDto, Driver>();
         }
     }
 }

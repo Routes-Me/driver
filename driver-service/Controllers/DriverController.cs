@@ -1,18 +1,16 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
-using RoutesSecurity;
+﻿using AutoMapper;
+using driver_service.Models.ResponseModel;
 using DriverService.Abstraction;
 using DriverService.Models;
-using DriverService.Models.DBModels;
 using DriverService.Models.Common;
+using DriverService.Models.DBModels;
 using DriverService.Models.ResponseModel;
-using System.Linq;
-using driver_service.Models.DbModels;
-using driver_service.Models.ResponseModel;
-using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using RoutesSecurity;
+using System;
+using System.Collections.Generic;
 
 namespace DriverService.Controllers
 {
@@ -21,53 +19,83 @@ namespace DriverService.Controllers
     [Route("v{version:apiVersion}/")]
     public class DriverController : ControllerBase
     {
-        private readonly IDriverRepository _driversRepository;
-        private readonly DriversServiceContext _context;
         private readonly AppSettings _appSettings;
         private readonly IMapper _mapper;
-        public DriverController(IDriverRepository driversRepository, DriversServiceContext context, IOptions<AppSettings> appSettings, IMapper mapper)
+        private IDriverRepository _repo;
+        public DriverController(IOptions<AppSettings> appSettings, IMapper mapper, IDriverRepository repository)
         {
-            _driversRepository = driversRepository;
-            _context = context;
             _appSettings = appSettings.Value;
             _mapper = mapper;
+            _repo = repository;
+        }
+
+        [HttpGet]
+        [Route("drivers")]
+        public IActionResult GetAll()
+        {
+            dynamic response;
+            dynamic obj;
+            try
+            {
+                response = _repo.GetAll();
+                obj = (_mapper.Map<List<DriverReadDto>>(response));
+
+                foreach (var item in obj)
+                {
+                    item.DriverId = Obfuscation.Encode(Convert.ToInt32(item.DriverId));
+                    item.UserId = Obfuscation.Encode(Convert.ToInt32(item.UserId));
+                    item.InstitutionId = Obfuscation.Encode(Convert.ToInt32(item.InstitutionId));
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, CommonMessage.ExceptionMessage + ex.Message);
+            }
+            return StatusCode(StatusCodes.Status200OK, obj);
         }
 
         [HttpGet]
         [Route("drivers/{id?}")]
-        public IActionResult Get(string id, string Include, [FromQuery] Pagination pageInfo)
+        public IActionResult GetByID(string Id)
         {
-            dynamic response = _driversRepository.GetDriver(id, pageInfo, Include);
-            return StatusCode(response.statusCode, response);
-        }
+            dynamic response;
+            dynamic obj;
+            try
+            {
+                response = _repo.GetById(Obfuscation.Decode(Id));
 
-        [HttpPut]
-        [Route("drivers")]
-        public IActionResult Put(DriversDto driversDto)
-        {
-            dynamic response = _driversRepository.UpdateDriver(driversDto);
-            return StatusCode(response.statusCode, response);
+                obj = _mapper.Map<DriverReadDto>(response);
+                obj.DriverId = Obfuscation.Encode(Convert.ToInt32(obj.DriverId));
+                obj.UserId = Obfuscation.Encode(Convert.ToInt32(obj.UserId));
+                obj.InstitutionId = Obfuscation.Encode(Convert.ToInt32(obj.InstitutionId));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, CommonMessage.ExceptionMessage + ex.Message);
+            }
+            return StatusCode(StatusCodes.Status200OK, obj);
         }
 
         [HttpPost]
         [Route("drivers")]
-        public async Task<IActionResult> PostDriver(DriversDto driversDto)
+        public IActionResult PostDriver(DriversDto driverdto)
         {
             PostDriverResponse response = new PostDriverResponse();
             try
             {
-                Driver driver = _driversRepository.PostDriver(driversDto);
-                _context.Drivers.Add(driver);
-                await _context.SaveChangesAsync();
+                if (driverdto == null)
+                    throw new ArgumentNullException(CommonMessage.InvalidData);
+
+                driverdto.UserId = Obfuscation.Decode(driverdto.User_Id);
+                driverdto.InstitutionId = Obfuscation.Decode(driverdto.Institution_Id);
+
+                Driver driver = _mapper.Map<Driver>(driverdto);
+
+                _repo.Insert(driver);
+                _repo.Save();
+
                 response.Id = Obfuscation.Encode(driver.DriverId);
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex.Message);
-            }
-            catch (ArgumentException ex)
-            {
-                return StatusCode(StatusCodes.Status409Conflict, ex.Message);
             }
             catch (Exception ex)
             {
@@ -83,113 +111,14 @@ namespace DriverService.Controllers
         {
             try
             {
-                Driver driver = _driversRepository.DeleteDriver(driverId);
-                _context.Drivers.Remove(driver);
-                _context.SaveChanges();
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
-            }
-            catch (ArgumentException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, ex.Message);
+                _repo.Delete(Obfuscation.Decode(driverId));
+                _repo.Save();
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status400BadRequest, CommonMessage.ExceptionMessage + ex.Message);
             }
             return StatusCode(StatusCodes.Status200OK);
-        }
-
-        [HttpPost]
-        [Route("driver/device")]
-        public IActionResult PostDevice(Device Device)
-        {
-            PostDriverResponse response = new PostDriverResponse();
-            try
-            {
-                _driversRepository.PostDevicesAsync(Device);
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex.Message);
-            }
-            catch (ArgumentException ex)
-            {
-                return StatusCode(StatusCodes.Status409Conflict, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, CommonMessage.ExceptionMessage + ex.Message);
-            }
-            response.Message = CommonMessage.InsertDevice;
-            return StatusCode(StatusCodes.Status201Created, response);
-
-        }
-
-        [HttpPut]
-        [Route("driver/device/{DeviceId}")]
-        public IActionResult UpdateToken(int DeviceId , DeviceDto dt)
-        {
-            try
-            {
-                Device dev = _driversRepository.GetDeviceByToken(DeviceId);
-                if (dev == null)
-                {
-                    return NotFound();
-                }
-                _mapper.Map(dt, dev);
-                _context.SaveChanges();
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex.Message);
-            }
-            catch (ArgumentException ex)
-            {
-                return StatusCode(StatusCodes.Status409Conflict, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, CommonMessage.ExceptionMessage + ex.Message);
-            }
-            return StatusCode(StatusCodes.Status200OK, CommonMessage.FCMTokenUpdated);
-        }
-
-        [HttpDelete]
-        [Route("driver/device/{DeviceId}")]
-        public IActionResult DeleteDevice(int DeviceId)
-        {
-            PostDriverResponse response = new PostDriverResponse();
-            try
-            {
-                _driversRepository.DeleteDevice(DeviceId);
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex.Message);
-            }
-            catch (ArgumentException ex)
-            {
-                return StatusCode(StatusCodes.Status409Conflict, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, CommonMessage.ExceptionMessage + ex.Message);
-            }
-            response.Message = CommonMessage.DeviceDeleted;
-            return StatusCode(StatusCodes.Status200OK);
-        }
-
-        [HttpGet]
-        [Route("driver/number")]
-        public IActionResult CheckNumber(Phone phone)
-        {
-            if (_context.Drivers.Where(p => p.Phone.Number == phone.Number && p.Phone.IsActive == true).FirstOrDefault() != null)
-                return StatusCode(StatusCodes.Status200OK);
-
-            return StatusCode(StatusCodes.Status404NotFound);
         }
 
     }

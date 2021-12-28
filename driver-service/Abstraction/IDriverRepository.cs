@@ -1,18 +1,10 @@
-﻿using System.Threading.Tasks;
-using driver_service.Models.DbModels;
-using DriverService.Models;
-using DriverService.Models.ResponseModel;
+﻿using driver_service.Abstraction;
+using DriverService.Models.DBModels;
 
 namespace DriverService.Abstraction
 {
-    public interface IDriverRepository
+    public interface IDriverRepository : IGenericRepository<Driver>
     {
-        dynamic DeleteDriver(string driverId);
-        dynamic UpdateDriver(DriversDto driversDto);
-        dynamic GetDriver(string driverId, Pagination pageInfo, string includeType);
-        dynamic PostDriver(DriversDto driversDto);
-        Device GetDeviceByToken(int DeviceId);
-        Task PostDevicesAsync(Device Device);
-        void DeleteDevice(int DeviceId);
+
     }
 }
