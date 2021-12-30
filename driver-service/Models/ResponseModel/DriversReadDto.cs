@@ -1,6 +1,6 @@
 ﻿namespace driver_service.Models.ResponseModel
 {
-    public class DriverReadDto
+    public class DriversReadDto
     {
         public string DriverId { get; set; }
         public string UserId { get; set; }

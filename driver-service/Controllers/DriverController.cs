@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using driver_service.Models.Common;
 using driver_service.Models.ResponseModel;
 using DriverService.Abstraction;
+using DriverService.Functions;
 using DriverService.Models;
 using DriverService.Models.Common;
 using DriverService.Models.DBModels;
@@ -8,9 +10,12 @@ using DriverService.Models.ResponseModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using RestSharp;
 using RoutesSecurity;
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace DriverService.Controllers
 {
@@ -21,12 +26,14 @@ namespace DriverService.Controllers
     {
         private readonly AppSettings _appSettings;
         private readonly IMapper _mapper;
-        private IDriverRepository _repo;
-        public DriverController(IOptions<AppSettings> appSettings, IMapper mapper, IDriverRepository repository)
+        private readonly IDriverRepository _driverRepository;
+        private readonly Dependencies _dependencies;
+        public DriverController(IOptions<AppSettings> appSettings, IMapper mapper, IDriverRepository repository , IOptions<Dependencies> dependencies)
         {
             _appSettings = appSettings.Value;
             _mapper = mapper;
-            _repo = repository;
+            _driverRepository = repository;
+            _dependencies = dependencies.Value;
         }
 
         [HttpGet]
@@ -37,8 +44,8 @@ namespace DriverService.Controllers
             dynamic obj;
             try
             {
-                response = _repo.GetAll();
-                obj = (_mapper.Map<List<DriverReadDto>>(response));
+                response = _driverRepository.GetAll();
+                obj = (_mapper.Map<List<DriversReadDto>>(response));
 
                 foreach (var item in obj)
                 {
@@ -63,9 +70,9 @@ namespace DriverService.Controllers
             dynamic obj;
             try
             {
-                response = _repo.GetById(Obfuscation.Decode(Id));
+                response = _driverRepository.GetById(Obfuscation.Decode(Id));
 
-                obj = _mapper.Map<DriverReadDto>(response);
+                obj = _mapper.Map<DriversReadDto>(response);
                 obj.DriverId = Obfuscation.Encode(Convert.ToInt32(obj.DriverId));
                 obj.UserId = Obfuscation.Encode(Convert.ToInt32(obj.UserId));
                 obj.InstitutionId = Obfuscation.Encode(Convert.ToInt32(obj.InstitutionId));
@@ -92,8 +99,8 @@ namespace DriverService.Controllers
 
                 Driver driver = _mapper.Map<Driver>(driverdto);
 
-                _repo.Insert(driver);
-                _repo.Save();
+                _driverRepository.Insert(driver);
+                _driverRepository.Save();
 
                 response.Id = Obfuscation.Encode(driver.DriverId);
             }
@@ -111,8 +118,8 @@ namespace DriverService.Controllers
         {
             try
             {
-                _repo.Delete(Obfuscation.Decode(driverId));
-                _repo.Save();
+                _driverRepository.Delete(Obfuscation.Decode(driverId));
+                _driverRepository.Save();
             }
             catch (Exception ex)
             {
@@ -120,6 +127,9 @@ namespace DriverService.Controllers
             }
             return StatusCode(StatusCodes.Status200OK);
         }
+
+      
+
 
     }
 }

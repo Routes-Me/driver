@@ -1,4 +1,5 @@
 using driver_service.Abstraction;
+using driver_service.Models.Common;
 using driver_service.Repository;
 using DriverService.Abstraction;
 using DriverService.Models.Common;
@@ -51,6 +52,8 @@ namespace driver_service
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<AppSettings>();
+            var dependenciessSection = Configuration.GetSection("Dependencies");
+            services.Configure<Dependencies>(dependenciessSection);
 
             services.AddApiVersioning(config =>
             {

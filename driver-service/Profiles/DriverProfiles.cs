@@ -11,7 +11,7 @@ namespace driver_service.Profiles
         {
             //Read Dto's
             CreateMap<Driver, DriversDto>();
-            CreateMap<Driver, DriverReadDto>();
+            CreateMap<Driver, DriversReadDto>();
             CreateMap<DriversDto, Driver>();
         }
     }
