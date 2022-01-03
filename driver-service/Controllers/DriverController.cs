@@ -127,9 +127,23 @@ namespace DriverService.Controllers
             }
             return StatusCode(StatusCodes.Status200OK);
         }
+        
+        [HttpGet]
+        [Route("drivers/checknumber/{number}")]
+        public IActionResult CheckNumber(string number)
+        {
+            Common comm = new Common();
+            try
+            {
+                comm.GetAPI(_appSettings.Host + _dependencies.UsersUrl + "number/" + number);
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return NotFound();
+            }
 
-      
-
+        }
 
     }
 }
