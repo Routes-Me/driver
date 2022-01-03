@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DriverService.Models.DBModels
+namespace driver_service.Models.DbModels
 {
     public partial class Driver
     {

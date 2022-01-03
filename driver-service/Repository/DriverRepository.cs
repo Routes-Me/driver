@@ -1,12 +1,10 @@
-﻿using driver_service.Repository;
-using DriverService.Abstraction;
-using DriverService.Models.DBModels;
+﻿using driver_service.Abstraction;
+using driver_service.Models.DbModels;
 
-namespace DriverService.Repository
+namespace driver_service.Repository
 {
     public class DriverRepository : GenericRepository<Driver>, IDriverRepository
     {
-
 
     }
 }

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
+using driver_service.Models.DbModels;
 using driver_service.Models.ResponseModel;
-using DriverService.Models.DBModels;
-using DriverService.Models.ResponseModel;
 
 namespace driver_service.Profiles
 {

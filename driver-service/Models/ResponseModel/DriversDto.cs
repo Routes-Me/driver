@@ -1,4 +1,4 @@
-﻿namespace DriverService.Models.ResponseModel
+﻿namespace driver_service.Models.ResponseModel
 {
     public class DriversDto
     {

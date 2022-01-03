@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
-namespace DriverService.Functions
+namespace driver_service.Functions
 {
     public class Common
     {

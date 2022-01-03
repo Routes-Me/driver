@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System.IO;
 
-namespace DriverService.Models.DBModels
+namespace driver_service.Models.DbModels
 {
     public partial class DriversServiceContext : DbContext
     {

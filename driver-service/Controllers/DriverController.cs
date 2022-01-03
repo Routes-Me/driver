@@ -1,23 +1,17 @@
 ﻿using AutoMapper;
+using driver_service.Abstraction;
+using driver_service.Models;
 using driver_service.Models.Common;
+using driver_service.Models.DbModels;
 using driver_service.Models.ResponseModel;
-using DriverService.Abstraction;
-using DriverService.Functions;
-using DriverService.Models;
-using DriverService.Models.Common;
-using DriverService.Models.DBModels;
-using DriverService.Models.ResponseModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using RestSharp;
 using RoutesSecurity;
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
 
-namespace DriverService.Controllers
+namespace driver_service.Controllers
 {
     [ApiController]
     [ApiVersion("1.0")]
@@ -28,12 +22,15 @@ namespace DriverService.Controllers
         private readonly IMapper _mapper;
         private readonly IDriverRepository _driverRepository;
         private readonly Dependencies _dependencies;
-        public DriverController(IOptions<AppSettings> appSettings, IMapper mapper, IDriverRepository repository , IOptions<Dependencies> dependencies)
+        private readonly IDriverIncludedRepository _driverIncludedRepository;
+
+        public DriverController(IOptions<AppSettings> appSettings, IMapper mapper, IDriverRepository repository, IOptions<Dependencies> dependencies, IDriverIncludedRepository driverIncludedRepository)
         {
             _appSettings = appSettings.Value;
             _mapper = mapper;
             _driverRepository = repository;
             _dependencies = dependencies.Value;
+            _driverIncludedRepository = driverIncludedRepository;
         }
 
         [HttpGet]
@@ -45,7 +42,7 @@ namespace DriverService.Controllers
             try
             {
                 response = _driverRepository.GetAll();
-                obj = (_mapper.Map<List<DriversReadDto>>(response));
+                obj = _mapper.Map<List<DriversReadDto>>(response);
 
                 foreach (var item in obj)
                 {
@@ -128,7 +125,14 @@ namespace DriverService.Controllers
             return StatusCode(StatusCodes.Status200OK);
         }
 
-      
+        [HttpGet]
+        [Route("drivers/Include")]
+        public IActionResult GetInclude(string Include, [FromQuery] Pagination pageInfo)
+        {
+            dynamic response = _driverIncludedRepository.GetDriver(pageInfo, Include);
+            return StatusCode((int)response.statusCode, response);
+        }
+
 
 
     }
