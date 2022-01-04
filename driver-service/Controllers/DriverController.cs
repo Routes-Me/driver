@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using driver_service.Abstraction;
+using driver_service.Functions;
 using driver_service.Models;
 using driver_service.Models.Common;
 using driver_service.Models.DbModels;
@@ -111,7 +112,7 @@ namespace driver_service.Controllers
 
         [HttpDelete]
         [Route("drivers/{driverId}")]
-        public IActionResult delete(string driverId)
+        public IActionResult Delete(string driverId)
         {
             try
             {
@@ -144,7 +145,7 @@ namespace driver_service.Controllers
                 comm.GetAPI(_appSettings.Host + _dependencies.UsersUrl + "number/" + number);
                 return Ok();
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 return NotFound();
             }
