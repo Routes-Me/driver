@@ -1,4 +1,4 @@
-﻿using DriverService.Models;
+﻿
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -21,7 +21,39 @@ namespace driver_service.Functions
             return JArray.Parse(modelsJson);
         }
 
-   
+        public IRestResponse PostAPI(string url, dynamic objectToSend)
+        {
+            var client = new RestClient(url);
+            var request = new RestRequest(Method.POST);
+            string jsonToSend = JsonConvert.SerializeObject(objectToSend);
+            request.AddParameter("application/json; charset=utf-8", jsonToSend, ParameterType.RequestBody);
+            request.RequestFormat = DataFormat.Json;
+            IRestResponse response = client.Execute(request);
+            if (response.StatusCode != HttpStatusCode.Created)
+                throw new Exception(response.Content);
+            return response;
+        }
+
+        public IRestResponse PutAPI(string url, dynamic objectToSend)
+        {
+            var client = new RestClient(url);
+            var request = new RestRequest(Method.PUT);
+            string jsonToSend = JsonConvert.SerializeObject(objectToSend);
+            request.AddParameter("application/json; charset=utf-8", jsonToSend, ParameterType.RequestBody);
+            request.RequestFormat = DataFormat.Json;
+            IRestResponse response = client.Execute(request);
+            if (response.StatusCode != HttpStatusCode.OK)
+                throw new Exception(response.Content);
+            return response;
+        }
+
+        public IRestResponse DeleteAPI(string url)
+        {
+            var client = new RestClient(url);
+            var request = new RestRequest(Method.DELETE);
+            return client.Execute(request);
+        }
+
         public dynamic GetAPI(string url)
         {
             var client = new RestClient(url);

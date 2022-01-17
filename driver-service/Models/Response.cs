@@ -47,6 +47,11 @@ namespace driver_service.Models
         }
     }
 
+    public class SuccessResponse
+    {
+        public string message { get; set; }
+    }
+
     public class PostDriverResponse
     {
         public string Message { get; set; }
@@ -69,6 +74,12 @@ namespace driver_service.Models
     {
         public Pagination Pagination { get; set; }
         public List<UserModel> Data { get; set; }
+    }
+
+    public class DeviceResponse
+    {
+        public string Message { get; set; }
+        public string DeviceId { get; set; }
     }
 
     public class InstitutionsData
