@@ -159,7 +159,7 @@ namespace driver_service.Controllers
         /// <response code="404">Driver Not Found</response>
         [HttpDelete]
         [Route("drivers/{driverId}")]
-        public IActionResult delete(string driverId)
+        public IActionResult Delete(string driverId)
         {
             try
             {
