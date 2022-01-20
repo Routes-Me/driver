@@ -249,17 +249,18 @@ namespace driver_service.Controllers
         /// Update a device by device ID
         /// </remarks>
         /// <param name="device"></param>
+        /// <param name="deviceId"></param>
         /// <response code="200"></response>
         [HttpPut]
-        [Route("drivers/UpdateToken")]
-        public IActionResult UpdateDevice(DeviceDto device)
+        [Route("drivers/UpdateToken/{deviceId}")]
+        public IActionResult UpdateDevice(DeviceDto device , string deviceId)
         {
             Common _common = new Common();
             DeviceResponse response = new DeviceResponse();
 
             try
             {
-                IRestResponse postedUserResponse = _common.PutAPI(_appSettings.Host + _dependencies.UsersUrl + "updatedevices", device);
+                IRestResponse postedUserResponse = _common.PutAPI(_appSettings.Host + _dependencies.UsersUrl + "updatedevices" + "/" + deviceId, device);
                 response = JsonConvert.DeserializeObject<DeviceResponse>(postedUserResponse.Content);
             }
             catch (Exception e)
@@ -332,7 +333,7 @@ namespace driver_service.Controllers
             {
                 if (sub == number && DateTime.Compare(dateTime, DateTime.UtcNow) > 0)
                 {
-                    _common.GetAPI(_appSettings.Host + _dependencies.UsersUrl + number + '/' + IdentifierId + '/' + c.OS.Family);
+                    _common.GetAPI(_appSettings.Host + _dependencies.UsersUrl + number + '/' + IdentifierId + '/' + c.OS.Family.ToLower());
                     return Ok();
                 }
 
