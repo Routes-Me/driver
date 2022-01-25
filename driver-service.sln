@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "driver-service", "driver-service\driver-service.csproj", "{D1FB3803-0FF4-4597-AA11-1A48B2FC274A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "driver-service", "driver-service\driver-service.csproj", "{97D8B657-3B9D-4F0D-9515-7A31519B5041}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D1FB3803-0FF4-4597-AA11-1A48B2FC274A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D1FB3803-0FF4-4597-AA11-1A48B2FC274A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D1FB3803-0FF4-4597-AA11-1A48B2FC274A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D1FB3803-0FF4-4597-AA11-1A48B2FC274A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97D8B657-3B9D-4F0D-9515-7A31519B5041}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97D8B657-3B9D-4F0D-9515-7A31519B5041}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97D8B657-3B9D-4F0D-9515-7A31519B5041}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97D8B657-3B9D-4F0D-9515-7A31519B5041}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {192F565B-B68B-4040-B475-1D283C5F0866}
+		SolutionGuid = {AA896B7D-3D2D-4C3D-A1BA-55390CB8DEDA}
 	EndGlobalSection
 EndGlobal
