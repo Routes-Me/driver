@@ -1,7 +1,8 @@
-﻿using driver_service.Models.DbModels;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
-namespace DriverService.Models.DBModels
+namespace driver_service.Models.DbModels
 {
     public partial class DriversServiceContext : DbContext
     {
@@ -14,31 +15,24 @@ namespace DriverService.Models.DBModels
         {
         }
         public virtual DbSet<Driver> Drivers { get; set; }
-        public virtual DbSet<Phone> Phone { get; set; }
-        public virtual DbSet<Device> Devices { get; set; }
+
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                IConfigurationRoot configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile(@Directory.GetCurrentDirectory() + "/../driver-service/appsettings.json")
+                    .Build();
+                var connectionString = configuration.GetConnectionString("DefaultConnection");
+                optionsBuilder.UseMySql(connectionString);
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Phone>(entity =>
-            {
-                entity.HasKey(e => e.PhoneId)
-                    .HasName("PRIMARY");
 
-                entity.ToTable("phone");
-
-                entity.HasIndex(e => e.DriverId)
-                    .HasName("driver_id");
-
-                entity.Property(e => e.PhoneId).HasColumnName("phone_id");
-
-                entity.Property(e => e.Number)
-                    .HasColumnName("number")
-                    .HasColumnType("varchar(20)")
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
-
-                entity.Property(e => e.DriverId).HasColumnName("driver_id");
-
-            });
 
             modelBuilder.Entity<Driver>(entity =>
             {
@@ -48,18 +42,16 @@ namespace DriverService.Models.DBModels
                 entity.ToTable("drivers");
 
                 entity.Property(e => e.DriverId).HasColumnName("driver_id");
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+                entity.Property(e => e.InstitutionId).HasColumnName("institution_id");
 
-                entity.Property(e => e.Name)
-                    .HasColumnName("name")
+                entity.Property(e => e.AvatarUrl)
+                    .HasColumnName("avatar_url")
                     .HasColumnType("varchar(255)")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.Email)
-                    .HasColumnName("email")
-                    .HasColumnType("varchar(40)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
+
             });
 
             OnModelCreatingPartial(modelBuilder);

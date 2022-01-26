@@ -1,11 +1,11 @@
-﻿using DriverService.Models.ResponseModel;
+﻿using driver_service.Models.ResponseModel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 
-namespace DriverService.Models
+namespace driver_service.Models
 {
     public class Response
     {
@@ -47,6 +47,11 @@ namespace DriverService.Models
         }
     }
 
+    public class SuccessResponse
+    {
+        public string message { get; set; }
+    }
+
     public class PostDriverResponse
     {
         public string Message { get; set; }
@@ -56,9 +61,31 @@ namespace DriverService.Models
     public class DriversGetResponse : Response
     {
         public Pagination pagination { get; set; }
-        public List<DriversDto> data { get; set; }
+        public List<DriversModel> data { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public JObject included { get; set; }
     }
+    public class InstitutionResponse : Response
+    {
+        public List<InstitutionsModel> Data { get; set; }
+    }
+    public class UserData
+    {
+        public Pagination Pagination { get; set; }
+        public List<UserModel> Data { get; set; }
+    }
+
+    public class DeviceResponse
+    {
+        public string Message { get; set; }
+        public string DeviceId { get; set; }
+    }
+
+    public class InstitutionsData
+    {
+        public Pagination Pagination { get; set; }
+        public List<InstitutionsModel> Data { get; set; }
+    }
+
 }

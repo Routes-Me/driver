@@ -1,20 +1,13 @@
-﻿
-using driver_service.Models.DbModels;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
+﻿using System;
 
-namespace DriverService.Models.DBModels
+namespace driver_service.Models.DbModels
 {
     public partial class Driver
     {
         public int DriverId { get; set; }
-        public string Email { get; set; }
+        public int UserId { get; set; }
+        public int InstitutionId { get; set; }
         public string AvatarUrl { get; set; }
-        public string Name { get; set; }
-        public string InvitationToken { get; set; }
-        public virtual Phone Phone { get; set; }
-        public virtual List<Device> Devices { get; set; }
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
     }
 }

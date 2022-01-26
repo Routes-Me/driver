@@ -1,4 +1,4 @@
-﻿namespace DriverService.Models
+﻿namespace driver_service.Models
 {
     public class CommonMessage
     {
@@ -16,4 +16,4 @@
         public static string FCMTokenInserted = "Token Inserted";
         public static string DeviceDeleted = "Device Deleted";
     }
-}       
+}

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DriverService.Controllers
+namespace driver_service.Controllers
 {
     [Route("[controller]")]
     public class HomeController : Controller
@@ -19,7 +19,7 @@ namespace DriverService.Controllers
         [Obsolete]
         public string Get()
         {
-            return "Driver service started successfully. Environment - " + _hostingEnv.EnvironmentName +"";
+            return "Driver service started successfully. Environment - " + _hostingEnv.EnvironmentName + "";
         }
     }
 }

@@ -1,7 +1,7 @@
-using DriverService.Abstraction;
-using DriverService.Models.Common;
-using DriverService.Models.DBModels;
-using DriverService.Repository;
+using driver_service.Abstraction;
+using driver_service.Models.Common;
+using driver_service.Models.DbModels;
+using driver_service.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -41,13 +41,17 @@ namespace driver_service
             });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IDriverRepository, DriverRepository>();
+            services.AddScoped<IDriverIncludedRepository, DriverIncludedRepository>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             //configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<AppSettings>();
+            var dependenciessSection = Configuration.GetSection("Dependencies");
+            services.Configure<Dependencies>(dependenciessSection);
 
             services.AddApiVersioning(config =>
             {
