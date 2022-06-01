@@ -1,61 +1,73 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RoutesSecurity;
 using System;
+using System.Collections.Generic;
 
-namespace DriverService.Models
+namespace driver_service.Models
 {
     public class Response
     {
-        public bool status { get; set; }
-        public string message { get; set; }
-        public int statusCode { get; set; }
-    }
 
-    public class ReturnResponse
-    {
-        public static dynamic ExceptionResponse(Exception ex)
-        {
-            Response response = new Response();
-            response.status = false;
-            response.message = CommonMessage.ExceptionMessage + ex.Message;
-            response.statusCode = StatusCodes.Status500InternalServerError;
-            return response;
-        }
-
-        public static dynamic SuccessResponse(string message, bool isCreated)
-        {
-            Response response = new Response();
-            response.status = true;
-            response.message = message;
-            if (isCreated)
-                response.statusCode = StatusCodes.Status201Created;
-            else
-                response.statusCode = StatusCodes.Status200OK;
-            return response;
-        }
-
-        public static dynamic ErrorResponse(string message, int statusCode)
-        {
-            Response response = new Response();
-            response.status = false;
-            response.message = message;
-            response.statusCode = statusCode;
-            return response;
-        }
-    }
-
-    public class PostDriverResponse
-    {
+        public int Code { get; set; }
         public string Message { get; set; }
-        public string Id { get; set; }
-    }
-
-    public class DriversGetResponse : Response
-    {
-        public Pagination pagination { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public JObject included { get; set; }
+        public bool Status { get; set; }
+        public static class ReturnResponse
+        {
+            public static dynamic ErrorResponse(string message, int statusCode)
+            {
+                Response response = new Response
+                {
+                    Status = false,
+                    Message = message,
+                    Code = statusCode
+                };
+                return response;
+            }
+            public static dynamic ExceptionResponse(Exception ex)
+            {
+                Response response = new Response
+                {
+                    Status = false,
+                    Message = CommonMessage.ExceptionMessage + ex.Message,
+                    Code = StatusCodes.Status500InternalServerError
+                };
+                return response;
+            }
+            public static dynamic SuccessResponse(string message, bool isCreated, int id = 0)
+            {
+                Response response = new Response
+                {
+                    Status = true,
+                    Message = message
+                };
+                if (isCreated)
+                {
+                    response.Code = StatusCodes.Status201Created;
+                    string Id = Obfuscation.Encode(id);
+                }
+                else
+                    response.Code = StatusCodes.Status200OK;
+                return response;
+            }
+        }
+        public class GetResponse<T> : Response where T : class
+        {
+            public Pagination Pagination { get; set; }
+            public List<T> Data { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public JObject Included { get; set; }
+        }
+        public class GetResponseById<T> : Response where T : class
+        {
+            public T Data { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public JObject Included { get; set; }
+        }
+        public class GetResponseApi<T> : Response where T : class
+        {
+            public List<T> Data { get; set; }
+        }
     }
 }

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DriverService.Controllers
+namespace driver_service.Controllers
 {
     [Route("[controller]")]
     public class HomeController : Controller

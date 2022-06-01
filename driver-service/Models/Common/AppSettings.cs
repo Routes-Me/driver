@@ -1,4 +1,4 @@
-﻿namespace DriverService.Models.Common
+﻿namespace driver_service.Models.Common
 {
     public class AppSettings
     {

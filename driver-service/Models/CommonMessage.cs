@@ -1,4 +1,4 @@
-﻿namespace DriverService.Models
+﻿namespace driver_service.Models
 {
     public class CommonMessage
     {

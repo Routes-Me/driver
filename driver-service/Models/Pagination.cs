@@ -1,9 +1,9 @@
-﻿namespace DriverService.Models
+﻿namespace driver_service.Models
 {
     public class Pagination
     {
-        public int offset { get; set; } = 1;
-        public int limit { get; set; } = 10;
-        public int total { get; set; }
+        public int Offset { get; set; } = 1;
+        public int Limit { get; set; } = 10;
+        public int Total { get; set; }
     }
 }

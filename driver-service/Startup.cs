@@ -1,9 +1,18 @@
+using driver_service.Abstraction;
+using driver_service.Helpers;
+using driver_service.Models;
+using driver_service.Models.Common;
+using driver_service.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using System;
 
 namespace driver_service
 {
@@ -15,13 +24,7 @@ namespace driver_service
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddApiVersioning(config =>
-            {
-                config.DefaultApiVersion = new ApiVersion(1, 0);
-                config.AssumeDefaultVersionWhenUnspecified = true;
-                config.ReportApiVersions = true;
-            });
+            services.AddConfigurations(Configuration);
         }
 
 
@@ -36,7 +39,7 @@ namespace driver_service
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
-            
+            app.UseAuthorization();
             app.UseCors("MyPolicy");
             app.UseEndpoints(endpoints =>
             {
