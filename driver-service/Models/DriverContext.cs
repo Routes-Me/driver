@@ -32,9 +32,15 @@ namespace driver_service.Models
                     .HasColumnType("varchar(255)")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
+                entity.Property(e => e.Name)
+                  .HasColumnName("name")
+                  .HasColumnType("varchar(50)")
+                  .HasCharSet("utf8mb4")
+                  .HasCollation("utf8mb4_0900_ai_ci");
 
-                //entity.HasMany(d=>d.DriverVehicles)
-                //.WithOne(d=>d.Driver)
+                entity.Property(e => e.CreatedAt)
+                  .HasColumnName("created_at")
+                  .HasColumnType("timestamp");
 
 
             });
@@ -44,9 +50,11 @@ namespace driver_service.Models
                     .HasName("PRIMARY");
 
                 entity.ToTable("driverVehicles");
+                entity.Property(e => e.DriverVehicleId).HasColumnName("driver_vehicle_id");
                 entity.HasIndex(e => e.DriverId)
                    .HasName("driver_id");
 
+               
 
                 entity.Property(e => e.DriverId).HasColumnName("driver_id");
                 entity.Property(e => e.VehicleId).HasColumnName("vehicle_id");
