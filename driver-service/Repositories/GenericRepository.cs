@@ -54,7 +54,7 @@ namespace driver_service.Repositories
 
             if (filter != null)
             {
-                query = query.Where(filter).Skip((pagination.Offset - 1) * pagination.Limit).Take(pagination.Limit);
+                query = query.Where(filter);
             }
             if (includeProperties!= null)
             {

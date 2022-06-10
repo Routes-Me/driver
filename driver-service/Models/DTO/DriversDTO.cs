@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace driver_service.Models.DTO
 {
@@ -7,12 +7,8 @@ namespace driver_service.Models.DTO
         public string DriverId { get; set; }
         public string InvitationId { get; set; }
         public string UserId { get; set; }
-        public List<string> VehicleId { get; set; } = new List<string>();
-
-    }
-
-    public class DriverVehiclesDTO
-    {
-        public string VehicleId { get; set; } 
+        public string Name { get; set; }
+        public string AvatarUrl { get; set; }
+        public string VehicleId { get; set; }
     }
 }

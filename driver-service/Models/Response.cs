@@ -57,7 +57,7 @@ namespace driver_service.Models
             public Pagination Pagination { get; set; }
             public List<T> Data { get; set; }
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-            public JObject Included { get; set; }
+            public JArray Included { get; set; }
         }
         public class GetResponseById<T> : Response where T : class
         {

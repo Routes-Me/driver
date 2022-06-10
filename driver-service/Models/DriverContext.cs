@@ -54,13 +54,13 @@ namespace driver_service.Models
                 entity.HasIndex(e => e.DriverId)
                    .HasName("driver_id");
 
-               
+
 
                 entity.Property(e => e.DriverId).HasColumnName("driver_id");
                 entity.Property(e => e.VehicleId).HasColumnName("vehicle_id");
 
                 entity.HasOne(d => d.Driver)
-                .WithMany(d => d.DriverVehicles)
+                .WithMany(d => d.DriverVehicle)
                 .HasForeignKey(d => d.DriverId)
                 .HasConstraintName("driver_id_ibfk_1")
                 .OnDelete(DeleteBehavior.Cascade);

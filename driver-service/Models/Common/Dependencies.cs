@@ -4,5 +4,6 @@
     {
         public string UsersUrl { get; set; }
         public string InstitutionsUrl { get; set; }
+        public string VehiclesUrl { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace driver_service.Repositories
     {
         private readonly DriverContext _context;
         public IDriverRepository DriverRepository { get; private set; }
+        public IDriverVehicleRepository DriverVehicleRepository { get; private set; }
 
 
         private bool disposed = false;
@@ -19,6 +20,11 @@ namespace driver_service.Repositories
             if (DriverRepository is null)
             {
                 DriverRepository = new DriverRepository(_context);
+
+            }
+            if (DriverVehicleRepository is null)
+            {
+                DriverVehicleRepository = new DriverVehicleRepository(_context);
 
             }
         }
