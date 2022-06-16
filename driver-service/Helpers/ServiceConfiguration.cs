@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using System;
 
 namespace driver_service.Helpers
 {
@@ -16,7 +15,6 @@ namespace driver_service.Helpers
     {
         internal static void AddConfigurations(this IServiceCollection services, IConfiguration configuration)
         {
-
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
@@ -34,14 +32,11 @@ namespace driver_service.Helpers
                 options.UseMySql(configuration.GetConnectionString("DefaultConnection"));
             });
 
-            //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IDriverRepository, DriverRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            //services.AddScoped<IDriverIncludedRepository, DriverIncludedRepository>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            //configure strongly typed settings objects
             var appSettingsSection = configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<AppSettings>();
