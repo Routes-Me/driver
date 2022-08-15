@@ -1,38 +1,42 @@
 ﻿using driver_service.Functions;
 using driver_service.Models;
 using driver_service.Models.DTO;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using RestSharp;
-using RoutesSecurity;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
+using System.Text;
+using driver_service.Models.Common;
+using driver_service.Models.Entities;
 using static driver_service.Models.Response;
 
 namespace driver_service.Helpers
 {
-    public static class ApiExtensions
+    public class ApiExtensions
     {
-        internal static dynamic GetUsers(List<DriversReadDTO> driversReadDTOs, string url)
+        internal static dynamic GetUsers(List<DriversReadDto> driversReadDtOs, string url)
         {
             try
             {
-                List<UsersDTO> usersDTOs = new List<UsersDTO>();
-                foreach (var item in driversReadDTOs)
+                var usersDtOs = new List<UsersDto>();
+                foreach (var item in driversReadDtOs)
                 {
                     var client = new RestClient(url + item.UserId);
                     var request = new RestRequest(Method.GET);
-                    IRestResponse response = client.Execute(request);
+                    var response = client.Execute(request);
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
                         var result = response.Content;
-                        var userData = JsonConvert.DeserializeObject<GetResponseApi<UsersDTO>>(result);
-                        usersDTOs.AddRange(userData.Data);
+                        var userData = JsonConvert.DeserializeObject<GetResponseApi<UsersDto>>(result);
+                        usersDtOs.AddRange(userData.Data);
                     }
                 }
-                var usersList = usersDTOs.GroupBy(x => x.UserId).Select(a => a.First()).ToList();
+
+                var usersList = usersDtOs.GroupBy(x => x.UserId).Select(a => a.First()).ToList();
                 return Common.SerializeJsonForIncludedRepo(usersList.Cast<dynamic>().ToList());
             }
             catch (Exception ex)
@@ -41,23 +45,23 @@ namespace driver_service.Helpers
                 throw new Exception(ReturnResponse.ErrorResponse(ex.Message, 500));
             }
         }
-        internal static dynamic GetVehicles(List<int?> VehicleIds, string url)
+        internal static dynamic GetVehicles(List<int?> vehicleIds, string url)
         {
             try
             {
-                List<VehiclesDTO> vehiclesDTO = new List<VehiclesDTO>();
+                var vehiclesDto = new List<VehiclesDto>();
                 var client = new RestClient(url);
                 var request = new RestRequest(Method.POST);
-                request.AddParameter("application/json; charset=utf-8", JsonConvert.SerializeObject(VehicleIds), ParameterType.RequestBody);
-                IRestResponse response = client.Execute(request);
+                request.AddParameter("application/json; charset=utf-8", JsonConvert.SerializeObject(vehicleIds), ParameterType.RequestBody);
+                var response = client.Execute(request);
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     var result = response.Content;
-                    var vehiclesData = JsonConvert.DeserializeObject<GetResponseApi<VehiclesDTO>>(result);
-                    vehiclesDTO.AddRange(vehiclesData.Data);
+                    var vehiclesData = JsonConvert.DeserializeObject<GetResponseApi<VehiclesDto>>(result);
+                    vehiclesDto.AddRange(vehiclesData.Data);
                 }
 
-                var vehiclesList = vehiclesDTO.GroupBy(x => x.VehicleId).Select(a => a.First()).ToList();
+                var vehiclesList = vehiclesDto.GroupBy(x => x.VehicleId).Select(a => a.First()).ToList();
                 return Common.SerializeJsonForIncludedRepo(vehiclesList.Cast<dynamic>().ToList());
 
             }

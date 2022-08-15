@@ -2,7 +2,7 @@
 
 namespace driver_service.Models.DTO
 {
-    public class DriversVehicleDTO
+    public class DriversVehicleDto
     {
         public List<int?> VehicleId { get; set; }
     }

@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-
 namespace driver_service.Models.DTO
 {
-    public class DriversDTO
+    public class DriversDto
     {
         public string DriverId { get; set; }
         public string InvitationId { get; set; }
@@ -10,5 +8,7 @@ namespace driver_service.Models.DTO
         public string Name { get; set; }
         public string AvatarUrl { get; set; }
         public string VehicleId { get; set; }
+        public string PhoneNumber { get; set; }
+        public string VerificationToken { get; set; }
     }
 }

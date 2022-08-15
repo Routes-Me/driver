@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace driver_service.Controllers
@@ -7,19 +6,16 @@ namespace driver_service.Controllers
     [Route("[controller]")]
     public class HomeController : Controller
     {
-        [Obsolete]
-        public readonly IHostingEnvironment _hostingEnv;
+        public readonly IWebHostEnvironment HostingEnv;
 
-        [Obsolete]
-        public HomeController(IHostingEnvironment hostingEnv)
+        public HomeController(IWebHostEnvironment hostingEnv)
         {
-            _hostingEnv = hostingEnv;
+            HostingEnv = hostingEnv;
         }
         [HttpGet]
-        [Obsolete]
         public string Get()
         {
-            return "Driver service started successfully. Environment - " + _hostingEnv.EnvironmentName +"";
+            return "Driver service started successfully. Environment - " + HostingEnv.EnvironmentName + "";
         }
     }
 }

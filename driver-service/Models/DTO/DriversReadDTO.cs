@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace driver_service.Models.DTO
 {
-    public class DriversReadDTO
+    public class DriversReadDto
     {
         public string DriverId { get; set; }
         public string UserId { get; set; }

@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using RoutesSecurity;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace driver_service.Models
 {
@@ -13,11 +14,12 @@ namespace driver_service.Models
         public int Code { get; set; }
         public string Message { get; set; }
         public bool Status { get; set; }
+        public string Id { get; set; }
         public static class ReturnResponse
         {
             public static dynamic ErrorResponse(string message, int statusCode)
             {
-                Response response = new Response
+                var response = new Response
                 {
                     Status = false,
                     Message = message,
@@ -27,7 +29,7 @@ namespace driver_service.Models
             }
             public static dynamic ExceptionResponse(Exception ex)
             {
-                Response response = new Response
+                var response = new Response
                 {
                     Status = false,
                     Message = CommonMessage.ExceptionMessage + ex.Message,
@@ -37,7 +39,7 @@ namespace driver_service.Models
             }
             public static dynamic SuccessResponse(string message, bool isCreated, int id = 0)
             {
-                Response response = new Response
+                var response = new Response
                 {
                     Status = true,
                     Message = message
@@ -45,7 +47,7 @@ namespace driver_service.Models
                 if (isCreated)
                 {
                     response.Code = StatusCodes.Status201Created;
-                    string Id = Obfuscation.Encode(id);
+                    response.Id = Obfuscation.Encode(id);
                 }
                 else
                     response.Code = StatusCodes.Status200OK;

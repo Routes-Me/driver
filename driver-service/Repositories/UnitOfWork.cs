@@ -1,6 +1,5 @@
 ﻿using driver_service.Abstraction;
 using driver_service.Models;
-using driver_service.Models.Entities;
 using System;
 
 namespace driver_service.Repositories
@@ -8,11 +7,11 @@ namespace driver_service.Repositories
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly DriverContext _context;
-        public IDriverRepository DriverRepository { get; private set; }
-        public IDriverVehicleRepository DriverVehicleRepository { get; private set; }
+        public IDriverRepository DriverRepository { get; }
+        public IDriverVehicleRepository DriverVehicleRepository { get; }
 
 
-        private bool disposed = false;
+        private bool _disposed;
         public UnitOfWork(DriverContext context)
         {
             _context = context;
@@ -53,14 +52,14 @@ namespace driver_service.Repositories
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
                     _context.Dispose();
                 }
             }
-            this.disposed = true;
+            _disposed = true;
         }
 
         public void Dispose()

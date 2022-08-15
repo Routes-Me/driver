@@ -11,7 +11,9 @@
         public static string DriverIdRequired = "Driver Id is required.";
         public static string DriverDelete = "Driver deleted successfully.";
         public static string DriverUpdate = "Driver updated successfully.";
-        public static string DriverRetrived = "Driver retrived successfully.";
+        public static string DriverRetrieved = "Driver retrieved successfully.";
         public static string PhoneAlreadyExists = "Phone number already exists.";
+        public static string TokenExpired = "Token is expired.";
+
     }
 }       

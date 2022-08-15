@@ -2,7 +2,7 @@
 
 namespace driver_service.Models.DTO
 {
-    public class VehiclesDTO
+    public class VehiclesDto
     {
         public string VehicleId { get; set; }
         public string PlateNumber { get; set; }

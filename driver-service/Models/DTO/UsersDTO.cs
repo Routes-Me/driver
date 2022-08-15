@@ -2,7 +2,7 @@
 
 namespace driver_service.Models.DTO
 {
-    public class UsersDTO
+    public class UsersDto
     {
         public string UserId { get; set; }
         public string Name { get; set; }
