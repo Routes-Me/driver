@@ -39,7 +39,7 @@ namespace driver_service
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
-            app.UseAuthorization();
+            app.UseAuthorization();app.UseAuthorization();
             app.UseCors("MyPolicy");
             app.UseEndpoints(endpoints =>
             {

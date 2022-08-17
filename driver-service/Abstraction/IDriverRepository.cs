@@ -1,4 +1,4 @@
-﻿using driver_service.Models.Entities;
+using driver_service.Models.Entities;
 
 namespace driver_service.Abstraction
 {
