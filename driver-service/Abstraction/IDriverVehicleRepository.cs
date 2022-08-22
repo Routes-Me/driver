@@ -2,7 +2,7 @@
 
 namespace driver_service.Abstraction
 {
-    public interface IDriverVehicleRepository:IGenericRepository<DriverVehicle>
+    public interface IDriverVehicleRepository : IGenericRepository<DriverVehicle>
     {
     }
 }

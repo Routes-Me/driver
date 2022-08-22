@@ -32,7 +32,7 @@ namespace driver_service.Repositories
             {
                 query = query.Where(filter);
             }
-            if (includeProperties!= null)
+            if (includeProperties != null)
             {
                 foreach (var includeProperty in includeProperties)
                 {

@@ -16,16 +16,8 @@ namespace driver_service.Repositories
         {
             _context = context;
 
-            if (DriverRepository is null)
-            {
-                DriverRepository = new DriverRepository(_context);
-
-            }
-            if (DriverVehicleRepository is null)
-            {
-                DriverVehicleRepository = new DriverVehicleRepository(_context);
-
-            }
+            DriverRepository ??= new DriverRepository(_context);
+            DriverVehicleRepository ??= new DriverVehicleRepository(_context);
         }
 
         public void BeginTransaction()

@@ -1,18 +1,9 @@
-using driver_service.Abstraction;
 using driver_service.Helpers;
-using driver_service.Models;
-using driver_service.Models.Common;
-using driver_service.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
-using System;
 
 namespace driver_service
 {
@@ -34,13 +25,12 @@ namespace driver_service
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseRouting();
             app.UseAuthentication();
-            app.UseAuthorization();app.UseAuthorization();
             app.UseCors("MyPolicy");
+            app.UseRouting();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -13,12 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using driver_service.Helpers;
-using Microsoft.AspNetCore.JsonPatch.Helpers;
-using Newtonsoft.Json;
-using RestSharp;
 using static driver_service.Helpers.ApiExtensions;
 using static driver_service.Models.Response;
 
@@ -152,12 +146,11 @@ namespace driver_service.Controllers
         public ActionResult Post(DriversDto driversDto)
         {
             var response = new GetResponse<Driver>();
-            //var tokenResponse = new TokenResponse();
             try
             {
                 if (driversDto == null)
                     throw new ArgumentNullException(CommonMessage.InvalidData);
-                if (VerifyToken(driversDto))
+                if (VerifyToken(driversDto)) // Verify expiry and claims 
                 {
                     var driver = new Driver
                     {
@@ -167,11 +160,12 @@ namespace driver_service.Controllers
                         AvatarUrl = driversDto.AvatarUrl,
                         VerificationToken = driversDto.VerificationToken
                     };
-                    //dynamic includeData = new JObject();
                     if (CheckExistence(driversDto))
                     {
-                        var driverVehicle = new DriverVehicle();
-                        driverVehicle.VehicleId = Obfuscation.Decode(driversDto.VehicleId);
+                        var driverVehicle = new DriverVehicle
+                        {
+                            VehicleId = Obfuscation.Decode(driversDto.VehicleId)
+                        };
                         var list = _unitOfWork.DriverRepository.Get(null, x => x.UserId == Obfuscation.Decode(driversDto.UserId), null, d => d.DriverVehicle);
 
                         if (list.FirstOrDefault()!.DriverVehicle.Any(x => x.VehicleId == Obfuscation.Decode(driversDto.VehicleId)))
@@ -203,18 +197,17 @@ namespace driver_service.Controllers
                     }
                     response.Status = true;
                     response.Code = StatusCodes.Status201Created;
-                    return StatusCode(response.Code,response);
+                    return StatusCode(response.Code, response);
                 }
                 else
                 {
                     throw new SecurityTokenExpiredException(CommonMessage.TokenExpired);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
-            //return StatusCode(StatusCodes.Status201Created, ReturnResponse.SuccessResponse(CommonMessage.DriverInsert, true));
         }
 
         [HttpDelete]
@@ -241,7 +234,6 @@ namespace driver_service.Controllers
                 return StatusCode(StatusCodes.Status404NotFound, ReturnResponse.ExceptionResponse(ex));
             }
         }
-
 
         private bool CheckExistence(DriversDto driversDto)
         {

@@ -1,17 +1,11 @@
 ﻿using driver_service.Functions;
-using driver_service.Models;
 using driver_service.Models.DTO;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
-using System.Text;
-using driver_service.Models.Common;
-using driver_service.Models.Entities;
 using static driver_service.Models.Response;
 
 namespace driver_service.Helpers
