@@ -1,7 +1,9 @@
 ﻿using driver_service.Functions;
 using driver_service.Models.DTO;
+using driver_service.Models.Entities;
 using Newtonsoft.Json;
 using RestSharp;
+using RoutesSecurity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,6 +65,37 @@ namespace driver_service.Helpers
             {
                 return ex;
             }
+        }
+
+        internal static dynamic GetVehicleDevice(DriverVehicle driverVehicle, string url, ref List<DriverDeviceDto> driverDeviceDto)
+        {
+            //List<DriverDeviceDto> getDeviceResponse = new List<DriverDeviceDto>();
+            //List<DeviceVehicleDto> getVehicleResponse = new List<DeviceVehicleDto>();
+
+            var client = new RestClient(url + Obfuscation.Encode(Convert.ToInt32(driverVehicle.VehicleId)) + "/devices?offset=1&limit=10&include=vehicles");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.GET);
+            IRestResponse response = client.Execute(request);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var result = response.Content;
+                var deviceResponse = JsonConvert.DeserializeObject<GetResponse<DriverDeviceDto>>(result);
+                driverDeviceDto = deviceResponse.Data.Select(d => new DriverDeviceDto
+                {
+                    DeviceId = d.DeviceId,
+                    SerialNumber = d.SerialNumber,
+                    SimSerialNumber = d.SimSerialNumber,
+                    VehicleId = d.VehicleId
+                }).ToList();
+                var getVehicleResponse = deviceResponse.Included["vehicles"].FirstOrDefault();
+                return getVehicleResponse;
+
+            }
+            else
+            {
+                throw new Exception(response.ErrorException.ToString());
+            }
+
         }
     }
 }

@@ -13,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using static driver_service.Helpers.ApiExtensions;
 using static driver_service.Models.Response;
 
@@ -271,6 +273,65 @@ namespace driver_service.Controllers
                 throw;
             }
 
+        }
+
+        [HttpGet]
+        [Route("{driverId}/vehicles")]
+        public ActionResult GetDriverIdFromVehicleService(string driverId, string include)
+        {
+            try
+            {
+                var response = new GetResponse<DriverDeviceDto>();
+                var driverDeviceDto = new List<DriverDeviceDto>();
+
+                if (string.IsNullOrEmpty(driverId))
+                {
+                    throw new ArgumentException($"'{nameof(driverId)}' cannot be null or empty.", nameof(driverId));
+                }
+                else
+                {
+                    var driver = _unitOfWork.DriverRepository.GetById(x => x.DriverId == Obfuscation.Decode(driverId), null, x => x.DriverVehicle);
+                    if (driver is null)
+                    {
+                        throw new KeyNotFoundException($"The given driver id '{driverId}' doesnot exist");
+                    }
+                    else
+                    {
+                        dynamic includeData = new JObject();
+                        if (!string.IsNullOrEmpty(include))
+                        {
+                            var includeArr = include.Split(',');
+                            if (includeArr.Length > 0)
+                            {
+                                foreach (var item in includeArr)
+                                {
+                                    if (item.ToLower() == "device" || item.ToLower() == "devices")
+                                    {
+                                        var vehicle = driver.DriverVehicle.FirstOrDefault();
+                                        includeData.vehicle = GetVehicleDevice(vehicle, _appSettings.Host + _dependencies.VehicleDeviceUrl, ref driverDeviceDto);
+                                    }
+                                }
+                            }
+                        }
+                        Pagination pagination = new Pagination(1,10, driverDeviceDto.Count);
+                        
+                        response.Pagination = pagination;
+                        response.Status = true;
+                        response.Code = 200;
+                        response.Data = driverDeviceDto;
+                        response.Included = includeData.vehicle;
+                        response.Message = CommonMessage.DriverDeviceRetrieved;
+                        response.Id = driverId;
+
+                        return StatusCode(response.Code, response);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, ReturnResponse.ExceptionResponse(ex));
+            }
         }
     }
 }

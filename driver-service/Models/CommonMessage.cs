@@ -14,6 +14,7 @@
         public static string DriverRetrieved = "Driver retrieved successfully.";
         public static string PhoneAlreadyExists = "Phone number already exists.";
         public static string TokenExpired = "Token is expired.";
+        public static string DriverDeviceRetrieved = "Device retrived successfully.";
 
     }
 }
